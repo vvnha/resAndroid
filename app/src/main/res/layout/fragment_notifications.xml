@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:id="@+id/layout_cart"
     tools:context=".ui.notifications.NotificationsFragment">
-
     <ListView
         android:id="@+id/listCart"
         android:layout_width="wrap_content"
