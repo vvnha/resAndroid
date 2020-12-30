@@ -28,9 +28,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class FoodAdapter extends PagerAdapter {
@@ -92,7 +94,7 @@ public class FoodAdapter extends PagerAdapter {
         Glide.with(context).load(urlImg+foods.get(position).getImg()).into(imageView);
         title.setText(foods.get(position).getFoodName() );
         desc.setText(foods.get(position).getIngres());
-        price.setText(foods.get(position).getPrice()+ " VND");
+        price.setText(NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(foods.get(position).getPrice()))+ " VND");
 
 
         //getCart(urlGetCart+cartid);

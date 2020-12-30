@@ -11,7 +11,9 @@ import com.example.dacn.R;
 import com.example.dacn.ui.dashboard.Detail;
 import com.example.dacn.ui.notifications.Order;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class OrderedItemAdapter extends BaseAdapter {
     private Context context;
@@ -61,7 +63,7 @@ public class OrderedItemAdapter extends BaseAdapter {
         Detail detail = detaiList.get(position);
         holder.foodName.setText(detail.getFoodName());
         holder.qty.setText("so luong: " + detail.getQty());
-        holder.total.setText(Integer.parseInt(detail.getPrice())*detail.getQty()+" VND");
+        holder.total.setText(NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(detail.getPrice())*detail.getQty())+" VND");
         return convertView;
     }
 }

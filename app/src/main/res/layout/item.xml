@@ -22,28 +22,35 @@
                 android:layout_height="150dp"
                 android:src="@drawable/brochure" />
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#262626"
+            <LinearLayout
+                android:id="@+id/infoFood"
                 android:layout_below="@+id/image"
-                android:layout_margin="10dp"
-                android:layout_alignParentLeft="true"
-                android:text="Brochure"
-                android:textSize="20sp"/>
-            <TextView
-                android:id="@+id/price"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_below="@+id/image"
-                android:layout_alignParentRight="true"
-                android:textSize="20dp"
-                android:text="10000 VND"/>
+                android:weightSum="10"
+                >
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#262626"
+                    android:layout_margin="10dp"
+                    android:layout_weight="6"
+                    android:text="Brochure"
+                    android:textSize="20sp"/>
+                <TextView
+                    android:gravity="end"
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="4"
+                    android:textSize="20dp"
+                    android:text="10000 VND"/>
+            </LinearLayout>
             <TextView
                 android:id="@+id/desc"
-                android:layout_below="@id/title"
+                android:layout_below="@id/infoFood"
                 android:layout_marginTop="3dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="16dp"

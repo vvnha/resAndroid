@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.example.dacn.R;
 import com.example.dacn.ui.notifications.Order;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class CancelAdapter extends BaseAdapter {
     private Context context;
@@ -63,7 +65,7 @@ public class CancelAdapter extends BaseAdapter {
 
         Order order = orderList.get(position);
         holder.orderDate.setText(order.getOrderDate());
-        holder.orderPrice.setText(order.getTotal()+ " VND");
+        holder.orderPrice.setText(NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(order.getTotal()))+ " VND");
 
         return convertView;
     }

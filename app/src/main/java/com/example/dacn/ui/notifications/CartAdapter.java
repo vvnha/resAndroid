@@ -25,11 +25,14 @@ import com.example.dacn.ui.dashboard.Detail;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-public class CartAdapter extends BaseAdapter {
+public class
+CartAdapter extends BaseAdapter {
 
     SharedPreferences sharedPreferences;
     private Context context;
@@ -85,9 +88,10 @@ public class CartAdapter extends BaseAdapter {
 
         Detail detail = cartList.get(position);
         holder.txtFoodName.setText(detail.getFoodName());
-        holder.txtPrice.setText(detail.getPrice()+" VND");
+        holder.txtPrice.setText(NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(detail.getPrice()))+" VND");
         holder.edtQty.setText(detail.getQty()+"");
-        holder.txtTotal.setText(detail.getQty()*Integer.parseInt(detail.getPrice())+" VND");
+        int total = detail.getQty()*Integer.parseInt(detail.getPrice());
+        holder.txtTotal.setText(NumberFormat.getNumberInstance(Locale.US).format(total)+" VND");
 
         holder.txtAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +101,8 @@ public class CartAdapter extends BaseAdapter {
                 //int price = Integer.parseInt(holder.txtPrice.getText().toString().trim());
                 holder.edtQty.setText(qty+"");
                 //show(qty+"");
-                holder.txtTotal.setText(qty*Integer.parseInt(detail.getPrice())+" VND");
+                int total = qty*Integer.parseInt(detail.getPrice());
+                holder.txtTotal.setText(NumberFormat.getNumberInstance(Locale.US).format(total)+" VND");
                 updateCartItem(detail,qty,position);
             }
         });
@@ -112,7 +117,8 @@ public class CartAdapter extends BaseAdapter {
                      qty--;
                      holder.edtQty.setText(qty+"");
                  }
-                holder.txtTotal.setText(qty*Integer.parseInt(detail.getPrice())+" VND");
+                int total = qty*Integer.parseInt(detail.getPrice());
+                holder.txtTotal.setText(NumberFormat.getNumberInstance(Locale.US).format(total)+" VND");
                 updateCartItem(detail,qty,position);
 
             }

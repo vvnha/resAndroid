@@ -27,9 +27,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class OrderAdapter extends BaseAdapter {
@@ -94,7 +96,7 @@ public class OrderAdapter extends BaseAdapter {
 
         Order order = orderList.get(position);
         holder.orderDate.setText(order.getOrderDate());
-        holder.orderPrice.setText(order.getTotal()+" VND");
+        holder.orderPrice.setText("Total: "+NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(order.getTotal()))+" VND");
         holder.orderDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
