@@ -51,11 +51,12 @@
     <FrameLayout
         android:id="@+id/frameContent"
         android:layout_width="match_parent"
-        android:layout_height="374dp"
+        android:layout_height="500dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_user"
-        app:layout_constraintVertical_bias="0.768" />
+        app:layout_constraintVertical_bias="0.706" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
