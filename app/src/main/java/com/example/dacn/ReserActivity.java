@@ -54,6 +54,7 @@ public class ReserActivity extends AppCompatActivity {
     String urlCreateCart = "https://restaurantqn.herokuapp.com/api/orders";
     String urlGetdata = "https://restaurantqn.herokuapp.com/api/users/getOrderUser";
     int cartid = -1;
+    String table = "";
     int totalMoney = 0;
     EditText edtDate, edtTime, edtName, edtMail, edtPhone ;
     //DatePicker datePicker;
@@ -70,6 +71,9 @@ public class ReserActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("dataTotal");
         totalMoney = bundle.getInt("totalMoney");
+        table = bundle.getString("table");
+        ///Log.d("table", table);
+
 
        sharedPreferences = getSharedPreferences("dataLogin",MODE_PRIVATE);
        cartid = sharedPreferences.getInt("cartid",-1);
@@ -355,7 +359,7 @@ public class ReserActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
     private void submit(int totalMoney, int cartid){
-        String perNum = "0";
+        String perNum = table;
         String orderDate = edtDate.getText().toString().trim()+" "+edtTime.getText().toString().trim();
         String service = "0";
         JSONObject item = new JSONObject();

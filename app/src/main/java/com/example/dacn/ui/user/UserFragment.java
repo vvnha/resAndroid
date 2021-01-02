@@ -29,6 +29,7 @@ import com.example.dacn.ServiceActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,6 +75,12 @@ public class UserFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ServiceActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("user", (Serializable) user);
+                            bundle.putInt("type",2);
+                            bundle.putInt("totalMoney",0);
+                            bundle.putInt("orderID", 0);
+                            intent.putExtra("data",bundle);
                             startActivity(intent);
                         }
                     });

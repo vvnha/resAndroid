@@ -2,7 +2,9 @@ package com.example.dacn.ui.ordered;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +22,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dacn.R;
+import com.example.dacn.ServiceActivity;
 import com.example.dacn.ui.dashboard.Detail;
 import com.example.dacn.ui.notifications.Order;
+import com.example.dacn.ui.user.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +48,8 @@ public class OrderAdapter extends BaseAdapter {
     ArrayList<Order> arrayOrder;
     OrderAdapter adapter;
     ArrayList<Detail> arrayOrdered;
+    String info;
+    User user;
     ListView lvOrder, lvOrdered;
     OrderedItemAdapter orderedItemAdapter;
     private String urlGetOrdered = "https://restaurantqn.herokuapp.com/api/orders/getDetail/";
@@ -93,6 +100,20 @@ public class OrderAdapter extends BaseAdapter {
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
+        info = sharedPreferences.getString("userInfo","");
+        JSONObject userInfo = null;
+        try {
+            userInfo = new JSONObject(info);
+            user = new User(
+                    userInfo.getInt("id"),
+                    userInfo.getString("name"),
+                    userInfo.getString("email"),
+                    userInfo.getString("phone"),
+                    userInfo.getInt("positionID"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         Order order = orderList.get(position);
         holder.orderDate.setText(order.getOrderDate());
@@ -100,7 +121,7 @@ public class OrderAdapter extends BaseAdapter {
         holder.orderDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogDetail(position);
+                dialogDetail(position, order.getOrderID());
             }
         });
 
@@ -191,7 +212,7 @@ public class OrderAdapter extends BaseAdapter {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private  void  dialogDetail(int position){
+    private  void  dialogDetail(int position, int orderID){
         //Order order = arrayOrder.get(position);
 
         Dialog dialog = new Dialog(context);
@@ -204,13 +225,27 @@ public class OrderAdapter extends BaseAdapter {
         getDetail(urlGetOrdered +orderList.get(position).getOrderID());
 
         Button closeDialog = dialog.findViewById(R.id.btnCloseDialog);
+        Button viewOrder = dialog.findViewById(R.id.btnViewOrder);
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
+        viewOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                Intent intent = new Intent(context.getApplicationContext(), ServiceActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("user", (Serializable) user);
+                bundle.putInt("type",2);
+                bundle.putInt("totalMoney",0);
+                bundle.putInt("orderID", orderID);
+                intent.putExtra("data",bundle);
+                context.startActivity(intent);
+            }
+        });
         dialog.show();
     }
     private void getDetail(String url){

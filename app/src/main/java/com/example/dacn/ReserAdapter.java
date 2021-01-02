@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class TableAdapter extends BaseAdapter {
+public class ReserAdapter extends BaseAdapter {
     private Context context;
     private int layout;
     private List<Table> tableList;
 
-    public TableAdapter(Context context, int layout, List<Table> tableList) {
+    public ReserAdapter(Context context, int layout, List<Table> tableList) {
         this.context = context;
         this.layout = layout;
         this.tableList = tableList;

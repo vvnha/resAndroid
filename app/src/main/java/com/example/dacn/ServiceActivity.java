@@ -8,8 +8,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.example.dacn.ui.user.User;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -19,6 +23,8 @@ public class ServiceActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
     ViewPager viewPager;
+    private int type, totalMoney, orderID;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +32,15 @@ public class ServiceActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getBundleExtra("data");
+        type = bundle.getInt("type");
+        user = (User) bundle.getSerializable("user");
+        orderID = bundle.getInt("orderID");
+        totalMoney = bundle.getInt("totalMoney");
+        //Toast.makeText(this, type+"",Toast.LENGTH_SHORT);
+        //Log.d("type", user.getName()+"");
 
         ArrayList<String> arrayList = new ArrayList<>();
 
@@ -44,6 +59,9 @@ public class ServiceActivity extends AppCompatActivity {
         for(int i = 0; i<arrayList.size(); i++){
             Bundle bundle = new Bundle();
             bundle.putString("title",arrayList.get(i));
+            bundle.putInt("type",type);
+            bundle.putInt("totalMoney",totalMoney);
+            bundle.putInt("orderID", orderID);
             fragment.setArguments(bundle);
             adapter.addFragment(fragment,arrayList.get(i));
             fragment = new ServiceFragment();

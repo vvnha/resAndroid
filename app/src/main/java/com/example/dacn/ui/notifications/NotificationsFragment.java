@@ -27,14 +27,19 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.dacn.EditInfoActivity;
+import com.example.dacn.LoginActivity;
 import com.example.dacn.R;
 import com.example.dacn.ReserActivity;
+import com.example.dacn.ReserTableActivity;
+import com.example.dacn.ServiceActivity;
 import com.example.dacn.ui.dashboard.Detail;
+import com.example.dacn.ui.user.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +53,8 @@ public class NotificationsFragment extends Fragment {
     ArrayList<Detail> arrayCart;
     CartAdapter adapter;
     Button btnReser;
+    User user = null;
+    String urlGetUser = "https://restaurantqn.herokuapp.com/api/user";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -70,6 +77,9 @@ public class NotificationsFragment extends Fragment {
         adapter = new CartAdapter(getActivity(),R.layout.cart_item,arrayCart);
         lvCart.setAdapter(adapter);
 
+        sharedPreferences = getActivity().getSharedPreferences("dataLogin",getContext().MODE_PRIVATE);
+        getUser(urlGetUser);
+
         btnReser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,18 +100,17 @@ public class NotificationsFragment extends Fragment {
                     totalMoney = totalMoney + Integer.parseInt(detail.getPrice())*detail.getQty();
                 }
                 //show("OK");
-                Intent intent = new Intent(getActivity(), ReserActivity.class);
+                Intent intent = new Intent(getActivity(), ReserTableActivity.class);
                 Bundle bundle = new Bundle();
+                bundle.putSerializable("user", (Serializable) user);
+                bundle.putInt("type",1);
                 bundle.putInt("totalMoney",totalMoney);
-               intent.putExtra("dataTotal",bundle);
+                intent.putExtra("data",bundle);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-
-
             }
         });
 
-
-        sharedPreferences = getActivity().getSharedPreferences("dataLogin",getContext().MODE_PRIVATE);
         int cartid = sharedPreferences.getInt("cartid",-1);
 //        String orderList = sharedPreferences.getString("listOrder","");
 //        if(!orderList.equals("")){
@@ -178,5 +187,47 @@ public class NotificationsFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    private void getUser(String url){
+        JSONObject userCurrent = null;
+        String token = sharedPreferences.getString("token","");
+        String header = "Bearer "+ token;
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            User userCurrent = new User(
+                                    response.getInt("id"),
+                                    response.getString("name"),
+                                    response.getString("email"),
+                                    response.getString("phone"),
+                                    response.getInt("positionID"));
+                            user = userCurrent;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("userInfo",response.toString());
+                        editor.commit();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(),"loi",Toast.LENGTH_LONG).show();
+                Intent intent1 = new Intent(getContext(), LoginActivity.class);
+                startActivity(intent1);
+            }
+        }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", header);
+                return params;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
+    }
 
 }
