@@ -32,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,11 +92,12 @@ public class FragmentA extends Fragment {
                         order.getString("service"),
                         order.getString("dateClick"));
                     arrayOrder.add(newOrder);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+//        reverseLis
+//        Collections.reverse(arrayOrder);
         adapter.notifyDataSetChanged();
     }
 
@@ -158,6 +161,7 @@ public class FragmentA extends Fragment {
                 e.printStackTrace();
             }
         }
+        Collections.reverse(arrayOrder);
         adapter.notifyDataSetChanged();
     }
 
