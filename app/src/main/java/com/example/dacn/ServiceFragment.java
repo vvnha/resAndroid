@@ -53,7 +53,7 @@ public class ServiceFragment extends Fragment {
     ArrayList<Table> arrayTable;
     TableAdapter adapter;
     String text = "";
-    ArrayList<Integer> arrayTableChosen;
+    ArrayList<Integer> arrayTableChosen, arrayTableOfOnlyUser;
     int type = 0;
     int orderID = 0;
     String perNum = "";
@@ -261,8 +261,17 @@ public class ServiceFragment extends Fragment {
 
     private void checkTable(int numberTable, String orderTable) {
         if(!orderTable.equals("")){
-//            String[] table  = orderTable.split(",");
-            if(orderTable.contains(numberTable+"")){
+            arrayTableOfOnlyUser = new ArrayList<>();
+            if(orderTable.indexOf(",")>-1){
+                String[] table  = orderTable.split(",");
+                for(int i =0; i<table.length; i++){
+                    arrayTableOfOnlyUser.add(Integer.parseInt(table[i]));
+                }
+            }else{
+                arrayTableOfOnlyUser.add(Integer.parseInt(orderTable));
+            }
+            Log.d("tablee",arrayTableOfOnlyUser.get(0).toString());
+            if(arrayTableOfOnlyUser.contains(numberTable)){
                 int dem = 0;
                 for(int i = 0; i<arrayTableChosen.size(); i++){
                     if(arrayTableChosen.get(i)==numberTable){
