@@ -54,7 +54,7 @@ public class ReserActivity extends AppCompatActivity {
     String urlCreateCart = "https://restaurantqn.herokuapp.com/api/orders";
     String urlGetdata = "https://restaurantqn.herokuapp.com/api/users/getOrderUser";
     int cartid = -1;
-    String table = "";
+    String table = "", date = "", time ="";
     int totalMoney = 0;
     EditText edtDate, edtTime, edtName, edtMail, edtPhone ;
     //DatePicker datePicker;
@@ -72,6 +72,9 @@ public class ReserActivity extends AppCompatActivity {
         Bundle bundle = intent.getBundleExtra("dataTotal");
         totalMoney = bundle.getInt("totalMoney");
         table = bundle.getString("table");
+        date = bundle.getString("date");
+        time = bundle.getString("time");
+
         ///Log.d("table", table);
 
 
@@ -115,6 +118,8 @@ public class ReserActivity extends AppCompatActivity {
                 edtName.setText(user.getName());
                 edtMail.setText(user.getMail());
                 edtPhone.setText(user.getPhone());
+                edtDate.setText(date);
+                edtTime.setText(time);
 //                edtName.setEnabled(false);
 //                edtMail.setEnabled(false);
 //                edtPhone.setEnabled(false);

@@ -126,6 +126,8 @@ public class ReserTableActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putInt("totalMoney",totalMoney);
                     bundle.putString("table", text);
+                    bundle.putString("date", edtDate.getText().toString().trim());
+                    bundle.putString("time", edtTime.getText().toString().trim());
                     intent.putExtra("dataTotal",bundle);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
