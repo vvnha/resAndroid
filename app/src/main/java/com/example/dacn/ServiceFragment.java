@@ -61,6 +61,7 @@ public class ServiceFragment extends Fragment {
     int totalMoney = 0;
     String tableOrdered = "";
     SharedPreferences sharedPreferences;
+    TextView tableOnlyUser;
     String urlLogin = "https://restaurantqn.herokuapp.com/api/orders/";
 
     Button btnOrder;
@@ -138,6 +139,8 @@ public class ServiceFragment extends Fragment {
         if(orderID>0){
             callApi(Request.Method.GET, urlLogin+orderID, null);
             //Log.d("length of array", orderID+"");
+        }else{
+            tableOnlyUser.setVisibility(View.GONE);
         }
 
 
@@ -296,6 +299,7 @@ public class ServiceFragment extends Fragment {
     private void AnhXa(View view) {
         btnOrder = view.findViewById(R.id.btnOrderTable);
         gvTable = view.findViewById(R.id.gridViewTable);
+        tableOnlyUser = view.findViewById(R.id.tableOrderedOnlyUser);
         arrayTable = new ArrayList<>();
         for(int i = 0; i<16; i++ ){
             arrayTable.add(new Table(i+1,false));
@@ -303,6 +307,7 @@ public class ServiceFragment extends Fragment {
         if (type == 2){
             btnOrder.setVisibility(View.GONE);
         }
+
 
     }
 
@@ -335,6 +340,7 @@ public class ServiceFragment extends Fragment {
                                 JSONObject data = new JSONObject(response.getString("data"));
                                 //Log.d("data",data.getString("perNum"));
                                 tableOrdered = data.getString("perNum");
+                                tableOnlyUser.setText("Your table: "+tableOrdered);
                             }
 
                         } catch (JSONException e) {
