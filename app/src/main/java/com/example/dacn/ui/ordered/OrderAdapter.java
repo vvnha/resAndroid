@@ -134,12 +134,15 @@ public class OrderAdapter extends BaseAdapter {
                 break;
             case 1:
                 txtStatus = "Da xac nhan";
+                holder.btnOrderCancel.setVisibility(View.GONE);
                 break;
             case 2:
                 txtStatus="Da thanh toan";
+                holder.btnOrderCancel.setVisibility(View.GONE);
                 break;
             case 3:
                 txtStatus="Da huy";
+                holder.btnOrderCancel.setVisibility(View.GONE);
                 break;
             default:
                 txtStatus = "Da huy";
