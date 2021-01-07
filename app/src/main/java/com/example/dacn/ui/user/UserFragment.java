@@ -68,7 +68,7 @@ public class UserFragment extends Fragment {
                         userInfo.getString("email"),
                         userInfo.getString("phone"),
                         userInfo.getInt("positionID"));
-                if (user.getPositionID() == 3 ){
+                if (user.getPositionID() == 4 ){
                     root = inflater.inflate(R.layout.fragment_staff, container, false);
                     btnService = root.findViewById(R.id.btnService);
                     btnService.setOnClickListener(new View.OnClickListener() {
@@ -97,9 +97,9 @@ public class UserFragment extends Fragment {
                     break;
                     case 2: posi = "manager";
                     break;
-                    case 3: posi = "staff";
+                    case 3: posi = "user";
                     break;
-                    case 4: posi = "user";
+                    case 4: posi = "staff";
                     break;
                     default: posi = "user";
                 }
