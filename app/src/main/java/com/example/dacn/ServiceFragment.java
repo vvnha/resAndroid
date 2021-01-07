@@ -126,7 +126,7 @@ public class ServiceFragment extends Fragment {
         //String title = getArguments().getString("title");
         //textView.setText(title);
         try {
-            mSocket = IO.socket("http://192.168.1.4:9000/");
+            mSocket = IO.socket("https://service-table.herokuapp.com/");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
