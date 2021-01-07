@@ -324,7 +324,15 @@ public class ReserActivity extends AppCompatActivity {
 //        Toast.makeText(getApplicationContext(), cartid+"",Toast.LENGTH_SHORT).show();
         if(dem==0){
             Calendar currentTime = Calendar.getInstance();
-            String date = currentTime.get(Calendar.YEAR) +"-"+currentTime.get(Calendar.MONTH)+"-"+currentTime.get(Calendar.DATE)+" "+currentTime.get(Calendar.HOUR)+":"+currentTime.get(Calendar.MINUTE)+":"+currentTime.get(Calendar.SECOND);
+            //String date = currentTime.get(Calendar.YEAR) +"-"+currentTime.get(Calendar.MONTH)+"-"+currentTime.get(Calendar.DATE)+" "+currentTime.get(Calendar.HOUR)+":"+currentTime.get(Calendar.MINUTE)+":"+currentTime.get(Calendar.SECOND);
+            String day = "";
+            if(Integer.parseInt(String.valueOf(currentTime.get(Calendar.DATE)))/10<1){
+                day = "0"+currentTime.get(Calendar.DATE);
+            }else {
+                day = currentTime.get(Calendar.DATE)+"";
+            }
+            String date = currentTime.get(Calendar.YEAR) +"-"+currentTime.get(Calendar.MONTH)+1+"-"+day+" "+currentTime.get(Calendar.HOUR)+":"+currentTime.get(Calendar.MINUTE)+":"+currentTime.get(Calendar.SECOND);
+
             JSONObject obj = new JSONObject();
             try {
                 obj.put("total",0);
@@ -345,6 +353,8 @@ public class ReserActivity extends AppCompatActivity {
         }
     }
     private void createCart(String url, JSONObject obj, JSONArray orders){
+        String token = sharedPreferences.getString("token","");
+        String header = "Bearer "+ token;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,obj,
                 new Response.Listener<JSONObject>() {
@@ -360,7 +370,14 @@ public class ReserActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
             }
         }
-        );
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", header);
+                return params;
+            }
+        };
         requestQueue.add(jsonObjectRequest);
     }
     private void submit(int totalMoney, int cartid){
