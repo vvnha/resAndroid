@@ -122,8 +122,7 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.remove("gmail");
-                editor.remove("checked");
+                editor.remove("token");
                 editor.commit();
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 startActivity(intent);
