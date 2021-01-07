@@ -21,7 +21,32 @@
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toTopOf="parent"-->
 <!--        app:layout_constraintVertical_bias="0.011" />-->
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cardSearch"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="15dp"
+        app:cardBackgroundColor="#AE2A00"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:text="Search your foods"
+            android:textColor="#F8B8A4"
+            android:gravity="center_vertical"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="10dp"/>
+    </androidx.cardview.widget.CardView>
+
     <androidx.viewpager.widget.ViewPager
+        android:layout_below="@+id/cardSearch"
         android:foregroundGravity="center"
         android:id="@+id/viewPager"
         android:layout_centerInParent="true"

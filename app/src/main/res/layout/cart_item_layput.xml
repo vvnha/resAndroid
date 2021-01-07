@@ -45,6 +45,11 @@
                     android:textColor="@color/color2"
                     android:layout_marginTop="8dp"
                     android:textAlignment="center"/>
+                <Button
+                    android:id="@+id/btnOrderFood"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Order"/>
             </LinearLayout>
 
         </LinearLayout>

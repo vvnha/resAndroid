@@ -66,7 +66,7 @@ public class HomeFragment extends Fragment {
         catView = root.findViewById(R.id.cat_Grid);
 
         loadSpecial();
-        SpecialAdapter adapter = new SpecialAdapter(catList);
+        SpecialAdapter adapter = new SpecialAdapter(catList, 0);
         catView.setAdapter(adapter);
         List<String> title = new ArrayList<>();
         title.add("Nhà hàng năm sao mang đẳng cấp quốc tế");

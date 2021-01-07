@@ -324,7 +324,7 @@ public class ReserActivity extends AppCompatActivity {
 //        Toast.makeText(getApplicationContext(), cartid+"",Toast.LENGTH_SHORT).show();
         if(dem==0){
             Calendar currentTime = Calendar.getInstance();
-            String date = currentTime.get(Calendar.YEAR) +":"+currentTime.get(Calendar.MONTH)+":"+currentTime.get(Calendar.DATE)+" "+currentTime.get(Calendar.HOUR)+":"+currentTime.get(Calendar.MINUTE)+":"+currentTime.get(Calendar.SECOND);
+            String date = currentTime.get(Calendar.YEAR) +"-"+currentTime.get(Calendar.MONTH)+"-"+currentTime.get(Calendar.DATE)+" "+currentTime.get(Calendar.HOUR)+":"+currentTime.get(Calendar.MINUTE)+":"+currentTime.get(Calendar.SECOND);
             JSONObject obj = new JSONObject();
             try {
                 obj.put("total",0);

@@ -1,146 +1,95 @@
-package com.example.dacn.ui.dashboard;
+package com.example.dacn;
 
-import android.animation.ArgbEvaluator;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dacn.R;
-import com.example.dacn.SearchActivity;
+import com.example.dacn.ui.dashboard.Food;
 import com.example.dacn.ui.notifications.Order;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DashboardFragment extends Fragment {
+public class SearchActivity extends AppCompatActivity {
 
-    String urlGetdata = "https://restaurantqn.herokuapp.com/api/foods/getFoods";
+    GridView gridSearch;
+    EditText edtName;
+    Button btnSearch;
+    public int cartid = -1;
+    List<Food> foods;
+    ArrayList<Order> orderList;
+    SearchAdapter adapter;
+    SharedPreferences sharedPreferences;
+    String urlGetdata = "https://restaurantqn.herokuapp.com/api/foods/search";
     String urlCreateCart = "https://restaurantqn.herokuapp.com/api/orders";
     String urlGetCart = "https://restaurantqn.herokuapp.com/api/users/getOrderUser";
-    ViewPager viewPager;
-    CardView searchView;
-    List<Food> foods;
-    FoodAdapter foodAdapter;
-    Integer[] colors = null;
-    JSONArray orders;
-    ArrayList<Order> orderList;
-    public int cartid = -1;
-    ArgbEvaluator argbEvaluator = new ArgbEvaluator();
-    SharedPreferences sharedPreferences;
 
-    private DashboardViewModel dashboardViewModel;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        //final TextView textView = root.findViewById(R.id.text_dashboard);
-        sharedPreferences = getActivity().getSharedPreferences("dataLogin", getContext().MODE_PRIVATE);
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-              //  textView.setText(s);
-            }
-        });
-
-        foods = new ArrayList<>();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+        gridSearch = findViewById(R.id.cat_Grid_Search);
+        edtName = findViewById(R.id.edtSearch);
+        btnSearch = findViewById(R.id.btnSearch);
+        sharedPreferences = getSharedPreferences("dataLogin", MODE_PRIVATE);
+        getCart(sharedPreferences,urlGetCart);
         orderList = new ArrayList<>();
-        getData(urlGetdata);
+        foods = new ArrayList<>();
 
-        //Toast.makeText(getActivity(),orderList.size()+"",Toast.LENGTH_LONG).show();
-        foodAdapter = new FoodAdapter(foods,getActivity(), sharedPreferences.getInt("cartid",-1));
+        show(cartid+"");
+        adapter = new SearchAdapter(foods,this,sharedPreferences.getInt("cartid",-1));
+        gridSearch.setAdapter(adapter);
 
 
-        viewPager = root.findViewById(R.id.viewPager);
-        searchView = root.findViewById(R.id.cardSearch);
 
-        viewPager.setAdapter(foodAdapter);
-        viewPager.setPadding(130, 0, 130, 0);
-
-        Integer[] colors_temp = {
-                getResources().getColor(R.color.color1),
-                getResources().getColor(R.color.color2),
-                getResources().getColor(R.color.color3),
-                getResources().getColor(R.color.color4)
-        };
-
-        colors = colors_temp;
-
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (position < (foodAdapter.getCount() - 1) && position < (colors.length - 1)) {
-                    viewPager.setBackgroundColor(
-                            (Integer) argbEvaluator.evaluate(
-                                    positionOffset,
-                                    colors[position],
-                                    colors[position + 1]
-                            )
-                    );
-                } else {
-                    viewPager.setBackgroundColor(colors[colors.length - 1]);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        searchView.setOnClickListener(new View.OnClickListener() {
+        btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), SearchActivity.class);
-                startActivity(intent);
+                //foods = new ArrayList<>();
+                String foodName =  edtName.getText().toString().trim();
+                if (!foodName.equals("")){
+                    JSONObject item = new JSONObject();
+                    try {
+                        item.put("name", foodName);
+                        getData(urlGetdata,item);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
-        return root;
     }
-    private void getData(String url){
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+    private void show (String mess){
+        Toast.makeText(this, mess, Toast.LENGTH_SHORT).show();
+    }
+    private void getData(String url, JSONObject item){
+        RequestQueue requestQueue = Volley.newRequestQueue(SearchActivity.this);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, item,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
                         try {
                             JSONArray result = response.getJSONArray("data");
                             for(int i =0 ; i<result.length(); i++){
@@ -156,8 +105,13 @@ public class DashboardFragment extends Fragment {
                                         obj.getInt("parentID")));
 
                             }
-                            foodAdapter.notifyDataSetChanged();
-                            //Toast.makeText(getActivity(),String.valueOf(foods.size()), Toast.LENGTH_SHORT).show();
+                            //adapter.notifyDataSetChanged();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -167,7 +121,7 @@ public class DashboardFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), "loi", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SearchActivity.this, "loi", Toast.LENGTH_LONG).show();
                     }
                 }
         );
@@ -179,7 +133,7 @@ public class DashboardFragment extends Fragment {
         String header = "Bearer "+ token;
         //Toast.makeText(getActivity(),url,Toast.LENGTH_LONG).show();
         //System.out.println(token);
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = Volley.newRequestQueue(SearchActivity.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -195,7 +149,7 @@ public class DashboardFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(),"loi",Toast.LENGTH_LONG).show();
+                Toast.makeText(SearchActivity.this,"loi",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent();
 
             }
@@ -257,18 +211,18 @@ public class DashboardFragment extends Fragment {
         }
     }
     private void createCart(String url, JSONObject obj, JSONArray orders){
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = Volley.newRequestQueue(SearchActivity.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,obj,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(getActivity(), "Tạo giỏ hàng thành công", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SearchActivity.this, "Tạo giỏ hàng thành công", Toast.LENGTH_LONG).show();
                         getCart(sharedPreferences, urlGetdata);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(SearchActivity.this, error.toString(), Toast.LENGTH_LONG).show();
             }
         }
         );

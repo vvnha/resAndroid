@@ -1,18 +1,16 @@
-package com.example.dacn.ui.dashboard;
+package com.example.dacn;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.PagerAdapter;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -22,7 +20,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.example.dacn.R;
+import com.example.dacn.ui.dashboard.Detail;
+import com.example.dacn.ui.dashboard.Food;
+import com.example.dacn.ui.home.SpecialModel;
+import com.example.dacn.ui.notifications.Order;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,102 +31,86 @@ import org.json.JSONObject;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class FoodAdapter extends PagerAdapter {
-    private List<Food> foods;
-    private LayoutInflater layoutInflater;
-    SharedPreferences sharedPreferences;
+public class SearchAdapter extends BaseAdapter {
+
+    private List<Food> cat_List;
     private Context context;
-    private int cartid;
-    private String urlGetCart = "https://restaurantqn.herokuapp.com/api/orders/getDetail/";
-    private String urlCreateItem = "https://restaurantqn.herokuapp.com/api/orders/getDetail/";
+    SharedPreferences sharedPreferences;
     private String urlUpdateItem = "https://restaurantqn.herokuapp.com/api/orderDetails";
     private String urlImg = "https://restaurantqn.herokuapp.com/";
-
+    private String urlGetCart = "https://restaurantqn.herokuapp.com/api/orders/getDetail/";
+    private int cartid;
     private ArrayList<Detail> details;
 
-    public FoodAdapter(List<Food> foods, Context context, int cartid) {
-        this.foods = foods;
+    public SearchAdapter(List<Food> cat_List, Context context, int cartid) {
+        this.cat_List = cat_List;
         this.context = context;
         this.cartid = cartid;
     }
 
-
     @Override
     public int getCount() {
-        return foods.size();
+        return cat_List.size();
     }
 
     @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view.equals(object);
+    public Object getItem(int position) {
+        return null;
     }
 
-    private class ViewHolder{
-        Button btnOrder;
-    }
-
-    @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        ViewHolder holder = new ViewHolder();
-        layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.item, container, false);
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View myView;
+        if (convertView == null){
+            myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_item_layput, parent, false);
+        }else {
+            myView = convertView;
+        }
+
         sharedPreferences = context.getSharedPreferences("dataLogin",context.getApplicationContext().MODE_PRIVATE);
         details = new ArrayList<>();
+        TextView catName = myView.findViewById(R.id.catName);
+        TextView noOfTests = myView.findViewById(R.id.no_of_tests);
+        ImageView imageView = myView.findViewById(R.id.imgSpecial);
+        Button btnOrder = myView.findViewById(R.id.btnOrderFood);
+        Glide.with(context).load(urlImg+cat_List.get(position).getImg()).into(imageView);
+        catName.setText(cat_List.get(position).getFoodName());
+        noOfTests.setText(NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(cat_List.get(position).getPrice()))+ " VND");
 
-        ImageView imageView;
-        TextView title, desc, price;
-        Button btnOrder;
-
-        imageView = view.findViewById(R.id.image);
-        title = view.findViewById(R.id.title);
-        desc = view.findViewById(R.id.desc);
-        price = view.findViewById(R.id.price);
-        btnOrder = view.findViewById(R.id.btnOrder);
-        //holder.btnOrder = view.findViewById(R.id.btnOrder);
-
-
-        //imageView.setImageResource(R.drawable.brochure);
-        Glide.with(context).load(urlImg+foods.get(position).getImg()).into(imageView);
-        title.setText(foods.get(position).getFoodName() );
-        desc.setText(foods.get(position).getIngres());
-        price.setText(NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(foods.get(position).getPrice()))+ " VND");
-
-
-        //getCart(urlGetCart+cartid);
-        //show(details.size()+"");
         btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 JSONObject item = new JSONObject();
                 try {
                     item.put("orderID",cartid);
-                    item.put("foodID",foods.get(position).getFoodID());
+                    item.put("foodID",cat_List.get(position).getFoodID());
                     item.put("qty",1);
-                    item.put("price", foods.get(position).getPrice());
+                    item.put("price", cat_List.get(position).getPrice());
                     //show(foods.get(position).getFoodID()+"");
                     //show(cartid+"");
                     getCart(urlGetCart+cartid, item);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         });
 
-        container.addView(view,0);
-        return view;
+        Glide.with(parent.getContext()).load(cat_List.get(position).getImg()).into(imageView);
+
+        return myView;
     }
 
-    @Override
-    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View)object);
-    }
     private void show (String mess){
         Toast.makeText(context.getApplicationContext(),mess,Toast.LENGTH_LONG).show();
     }
@@ -167,26 +152,26 @@ public class FoodAdapter extends PagerAdapter {
 
     public ArrayList<Detail> getItems(JSONArray cart,JSONObject item){
         int dem =0;
-            for (int i = 0; i < cart.length(); i++) {
-                try {
-                    JSONObject cartItem = cart.getJSONObject(i);
-                    Detail detail = new Detail(cartItem.getInt("detailID"),
-                            cartItem.getInt("orderID"),
-                            cartItem.getInt("foodID"),
-                            cartItem.getInt("qty"),
-                            cartItem.getString("price"),
-                            cartItem.getString("foodName"));
-                    details.add(detail);
-                    if (detail.getFoodID() == item.getInt("foodID")) {
-                        dem++;
-                        updateCartItem(urlUpdateItem + "/" + detail.getDetailID(), detail);
-                        break;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        for (int i = 0; i < cart.length(); i++) {
+            try {
+                JSONObject cartItem = cart.getJSONObject(i);
+                Detail detail = new Detail(cartItem.getInt("detailID"),
+                        cartItem.getInt("orderID"),
+                        cartItem.getInt("foodID"),
+                        cartItem.getInt("qty"),
+                        cartItem.getString("price"),
+                        cartItem.getString("foodName"));
+                details.add(detail);
+                if (detail.getFoodID() == item.getInt("foodID")) {
+                    dem++;
+                    updateCartItem(urlUpdateItem + "/" + detail.getDetailID(), detail);
+                    break;
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            //Toast.makeText(context.getApplicationContext(), dem+"", Toast.LENGTH_LONG).show();
+        }
+        //Toast.makeText(context.getApplicationContext(), dem+"", Toast.LENGTH_LONG).show();
         if (dem == 0) {
             createCartItem(urlUpdateItem, item);
         }
@@ -244,6 +229,4 @@ public class FoodAdapter extends PagerAdapter {
         };
         requestQueue.add(jsonObjectRequest);
     }
-
-
 }

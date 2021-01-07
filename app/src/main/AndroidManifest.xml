@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DACN"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ReserTableActivity"></activity>
+        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".ReserTableActivity" />
         <activity android:name=".EditInfoActivity" />
         <activity android:name=".ServiceActivity" />
         <activity
