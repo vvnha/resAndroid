@@ -42,7 +42,7 @@ public class UserFragment extends Fragment {
     String urlGetUser = "https://restaurantqn.herokuapp.com/api/user";
     SharedPreferences sharedPreferences;
     TextView txtName, txtMail, txtPhone, txtPosi;
-    Button btnService, btnEdit;
+    Button btnService, btnEdit, btnLogOut;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class UserFragment extends Fragment {
                         userInfo.getString("email"),
                         userInfo.getString("phone"),
                         userInfo.getInt("positionID"));
-                if (user.getPositionID() > 1 ){
+                if (user.getPositionID() == 3 ){
                     root = inflater.inflate(R.layout.fragment_staff, container, false);
                     btnService = root.findViewById(R.id.btnService);
                     btnService.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +115,17 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), EditInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove("gmail");
+                editor.remove("checked");
+                editor.commit();
+                Intent intent = new Intent(getContext(), LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -171,5 +182,6 @@ public class UserFragment extends Fragment {
         txtPhone = view.findViewById(R.id.txtUserPhone);
         txtPosi = view.findViewById(R.id.txtUserPosi);
         btnEdit = view.findViewById(R.id.btnEditInfo);
+        btnLogOut = view.findViewById(R.id.btnLogOut);
     }
 }
