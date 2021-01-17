@@ -128,21 +128,24 @@ public class OrderAdapter extends BaseAdapter {
         });
 
         String txtStatus;
-        switch (Integer.parseInt(order.getService())){
+        int status = Integer.parseInt(order.getService());
+        if(status == 0){
+            holder.btnOrderCancel.setVisibility(View.VISIBLE);
+        }else{
+            holder.btnOrderCancel.setVisibility(View.GONE);
+        }
+        switch (status){
             case 0:
                 txtStatus = "Chua xac nhan";
                 break;
             case 1:
                 txtStatus = "Da xac nhan";
-                holder.btnOrderCancel.setVisibility(View.GONE);
                 break;
             case 2:
                 txtStatus="Da thanh toan";
-                holder.btnOrderCancel.setVisibility(View.GONE);
                 break;
             case 3:
                 txtStatus="Da huy";
-                holder.btnOrderCancel.setVisibility(View.GONE);
                 break;
             default:
                 txtStatus = "Da huy";
