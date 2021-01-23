@@ -360,16 +360,18 @@ public class ReserTableActivity extends AppCompatActivity {
                         }
                     });
                 }
+            }else{
+                tableNotChoose.add(Integer.parseInt(numNotChoose));
+                arrayTable.get(Integer.parseInt(numNotChoose)-1).setStatus(true);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         }else{
-            tableNotChoose.add(Integer.parseInt(numNotChoose));
-            arrayTable.get(Integer.parseInt(numNotChoose)-1).setStatus(true);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.notifyDataSetChanged();
-                }
-            });
+            Toast.makeText(this, "Ban trong, ban co the dat", Toast.LENGTH_SHORT).show();
         }
     }
 }
