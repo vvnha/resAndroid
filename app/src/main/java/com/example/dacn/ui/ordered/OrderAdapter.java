@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -186,6 +187,7 @@ public class OrderAdapter extends BaseAdapter {
     }
 
     private void callApi(int method, String url, JSONObject item){
+        Log.d("tamne",item.toString());
         String token = sharedPreferences.getString("token","");
         String header = "Bearer "+ token;
         RequestQueue requestQueue = Volley.newRequestQueue(context.getApplicationContext());
